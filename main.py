@@ -6,7 +6,7 @@ import base64
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://api.prayanne.co.kr"])
 
 # MySQL        ㅇㅇ
 app.config['MYSQL_HOST'] = 'tuk_mysql'
