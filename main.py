@@ -30,6 +30,15 @@ def generate_salt(length=16):
     return base64.b64encode(os.urandom(length)).decode('utf-8')
 
 #      API
+
+@app.before_request
+def log_request_info():
+    print("====log part====\n")
+    print(f"REQUEST: {request.method} {request.url}")
+    print(f"Headers: {request.headers}")
+    print(f"Body: {request.get_data()}")
+    print("================\n\n")
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -38,7 +47,7 @@ def login():
     username = data.get('username')
     password = data.get('userpassword')        
 
-    print(f"login part\nusername: {username}\nuserpasswd: {password}\n")
+    print(f"login part\nusername: {username}\nuserpassword: {password}\n")
     
     cursor = mysql.cursor()
     # 라이브러리 MYSQLdb는 값을 전달할 때, ***튜플***로 넘겨주어야 한다. 아래 (,)로 지정한 이유가 그것이며, 꼭 명심하여, 살펴볼 것, 한 시간 날렸음
@@ -79,7 +88,7 @@ def register():
     #print("====Debug Part====\n")
 
 
-    return jsonify({'result': 'test', 'message': '제발 되어 주세요..'})
+    return jsonify({'result': 'test', 'message': '회원가입 프리 메세지 추가 요망'})
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000)
+    app.run(host='0.0.0.0', port=5000)
