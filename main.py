@@ -31,17 +31,26 @@ def generate_salt(length=16):
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
-    username = data.get('username')
-    password = data.get('password')  #           
+    print("request data\n",data)
 
+    username = data.get('username')
+    password = data.get('userpassword')        
+
+    print(f"login part\nusername: {username}\nuserpasswd: {password}\n")
+    
     cursor = mysql.cursor()
+    # 라이브러리 MYSQLdb는 값을 전달할 때, ***튜플***로 넘겨주어야 한다. 아래 (,)로 지정한 이유가 그것이며, 꼭 명심하여, 살펴볼 것, 한 시간 날렸음
     cursor.execute("SELECT password_hash, salt FROM users WHERE username = %s", (username,))
     user = cursor.fetchone()
-    mysql.commit()
 
-    if user:
-        input_hash = hash_password(password, user['salt'])
-        if input_hash == user['password_hash']:
+    print("print user: ")
+    print(user)
+    
+    if not user:
+        return jsonify({'result': 'fail', 'message': '존재하지 않는 사용자입니다.'})
+    elif user:
+        input_hash = hash_password(password, user[1])
+        if input_hash == user[0]:
             return jsonify({'result': 'success', 'message': '        '})
     
     return jsonify({'result': 'fail', 'message': '                   '})
@@ -56,7 +65,7 @@ def register():
     salt = generate_salt()
     hashed_pw = hash_password(userpassword, salt)
 
-    print(f"username: {username} \nuseremail: {useremail} \nuserpasswd: {userpassword} \nsalt: {salt} \nhash_password: {hashed_pw}\n\n")
+    print(f"register part\nusername: {username} \nuseremail: {useremail} \nuserpasswd: {userpassword} \nsalt: {salt} \nhash_password: {hashed_pw}\n\n")
 
     cursor = mysql.cursor()
     cursor.execute(
