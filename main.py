@@ -3,8 +3,10 @@ import os
 import MySQLdb
 import hashlib
 import base64
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # MySQL        ㅇㅇ
 app.config['MYSQL_HOST'] = 'tuk_mysql'
