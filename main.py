@@ -91,4 +91,8 @@ def register():
     return jsonify({'result': 'test', 'message': '회원가입 프리 메세지 추가 요망'})
 
 if __name__ == '__main__':
+    # host를 0.0.0.0 으로 구성해야 외부 접속이 가능함. 뒷통수 얻어맞고 뇌진탕 발현.
+    # 127.0.0.1 or localhost로 구성시, 내부 접속만 허용하게 됨.
+    # 내부 접속으로 host 구성시 -> 내부 IP인 127.0.0.1만 지정됨.
+    # 0.0.0.0 으로 host 구성시 -> 도커 IP인 172.17.~ 이 추가로 지정됨.
     app.run(host='0.0.0.0', port=5000)
