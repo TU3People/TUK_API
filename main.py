@@ -1,0 +1,74 @@
+from flask import Flask, request, jsonify
+import os
+import MySQLdb
+import hashlib
+import base64
+
+app = Flask(__name__)
+
+# MySQL        ㅇㅇ
+app.config['MYSQL_HOST'] = 'tuk_mysql'
+app.config['MYSQL_USER'] = 'journey'
+app.config['MYSQL_PASSWORD'] = 'Qwer!234'
+app.config['MYSQL_DB'] = 'journey'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+mysql = MySQLdb.connect(
+    host=app.config['MYSQL_HOST'],
+    user=app.config['MYSQL_USER'],
+    passwd=app.config['MYSQL_PASSWORD'],
+    db=app.config['MYSQL_DB']
+)
+
+#               
+def hash_password(password, salt):
+    return hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
+
+def generate_salt(length=16):
+    return base64.b64encode(os.urandom(length)).decode('utf-8')
+
+#      API
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')  #           
+
+    cursor = mysql.cursor()
+    cursor.execute("SELECT password_hash, salt FROM users WHERE username = %s", (username,))
+    user = cursor.fetchone()
+    mysql.commit()
+
+    if user:
+        input_hash = hash_password(password, user['salt'])
+        if input_hash == user['password_hash']:
+            return jsonify({'result': 'success', 'message': '        '})
+    
+    return jsonify({'result': 'fail', 'message': '                   '})
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.json
+    username = data.get('username')
+    useremail = data.get('useremail')
+    userpassword = data.get('userpassword')
+    
+    salt = generate_salt()
+    hashed_pw = hash_password(userpassword, salt)
+
+    print(f"username: {username} \nuseremail: {useremail} \nuserpasswd: {userpassword} \nsalt: {salt} \nhash_password: {hashed_pw}\n\n")
+
+    cursor = mysql.cursor()
+    cursor.execute(
+        "INSERT INTO users (username, useremail, password_hash, salt, created_at) VALUES (%s, %s, %s, %s, NOW())",
+        (username, useremail, hashed_pw, salt)
+    )
+    mysql.commit()
+
+    #print("====Debug Part====\n")
+
+
+    return jsonify({'result': 'test', 'message': '제발 되어 주세요..'})
+
+if __name__ == '__main__':
+    app.run(host='localhost', port=5000)
