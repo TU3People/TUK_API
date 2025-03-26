@@ -11,6 +11,7 @@ def test_login(username, userpassword):
         print(f"Status Code: {res.status_code}")
         try:
             print("Response JSON:", res.json())
+            print(res.json())
         except ValueError:
             print("응답이 JSON이 아닙니다:")
             print("응답 내용:", res.text)

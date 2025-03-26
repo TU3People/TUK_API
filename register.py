@@ -12,6 +12,7 @@ def test_register(username, useremail, userpassword):
         print(f"Status Code: {res.status_code}")
         try:
             print("Response JSON:", res.json())
+            print(res.json().message)
         except ValueError:
             print("응답이 JSON이 아닙니다:")
             print("응답 내용:", res.text)

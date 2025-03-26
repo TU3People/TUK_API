@@ -51,9 +51,9 @@ def login():
     elif user:
         input_hash = hash_password(password, user[1])
         if input_hash == user[0]:
-            return jsonify({'result': 'success', 'message': '        '})
+            return jsonify({'result': 'success', 'message': username + '님 환영합니다.'})
     
-    return jsonify({'result': 'fail', 'message': '                   '})
+    return jsonify({'result': 'fail', 'message': '잘못된 비밀번호를 입력하셨습니다. '})
 
 @app.route('/register', methods=['POST'])
 def register():
