@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <title>멤버 선택</title>
+</head>
+<body>
+  <h1>본인 멤버 선택</h1>
+  <form action="{{ url_for('select_topic') }}" method="post">
+    <select name="member">
+      {% for m in members %}
+      <option value="{{ m }}">{{ m }}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="다음">
+  </form>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+</body>
+</html>

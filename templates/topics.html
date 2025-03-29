@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+  <title>주제 선택</title>
+</head>
+<body>
+  <h1>주제 선택</h1>
+  <p>선택한 멤버: {{ member }}</p>
+  <ul>
+    {% for topic in topics %}
+    <li><a href="{{ url_for('upload', member=member, topic=topic) }}">{{ topic }}</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

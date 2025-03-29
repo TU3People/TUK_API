@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <title>{{ topic }} 자료 업로드</title>
+</head>
+<body>
+  <h1>{{ topic }} 주제 자료 업로드</h1>
+  <p>멤버: {{ member }}</p>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% for material in materials %}
+      <label>{{ material }}:
+        <input type="file" name="{{ material }}">
+      </label><br>
+    {% endfor %}
+    <input type="submit" value="업로드">
+  </form>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+</body>
+</html>
